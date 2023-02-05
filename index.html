@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<!--
+	Aerial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+	<head>
+		<title>Harrison. A.Witt</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
+		<link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
+	</head>
+	<body class="is-preload">
+		<div id="wrapper">
+			<div id='map'></div>
+
+<script>
+			window.onload = function() { document.body.classList.remove('is-preload'); }
+			window.ontouchmove = function() { return false; }
+			window.onorientationchange = function() { document.body.scrollTop = 0; }
+
+
+			mapboxgl.accessToken = 'pk.eyJ1IjoiYWVjaHdpdHQiLCJhIjoiY2p1bmY2c2NoMDJtNzN5bWszandnaTJwdSJ9.HZix8nD_M3i7XeTdjFMSuw';
+			var map = new mapboxgl.Map({
+			    container: 'map',
+			    style: 'mapbox://styles/mapbox/outdoors-v12',
+			    center: [-90.05239, 35.14942],
+			    zoom: 17,
+			    pitch: 65
+			});
+			
+			function rotateCamera(timestamp) {
+			    // clamp the rotation between 0 -360 degrees
+			    // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+			    map.rotateTo((timestamp / 100) % 360, {duration: 14});
+			    // Request the next frame of the animation.
+			    requestAnimationFrame(rotateCamera);
+			}
+
+
+			map.on('style.load', function () {
+			    // Start the animation.
+			    setTimeout(() => {
+			        requestAnimationFrame(rotateCamera);
+			    }, 500);
+
+			    // Add 3d buildings and remove label layers to enhance the map
+			    var layers = map.getStyle().layers;
+			    for (var i = 0; i < layers.length; i++) {
+			        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+			            // remove text labels
+			            map.removeLayer(layers[i].id);
+			        }
+			    }
+
+			    map.addLayer({
+			        'id': '3d-buildings',
+			        'source': 'composite',
+			        'source-layer': 'building',
+			        'filter': ['==', 'extrude', 'true'],
+			        'type': 'fill-extrusion',
+			        'minzoom': 15,
+			        'paint': {
+			            'fill-extrusion-color': '#ead8c3',
+
+			            // use an 'interpolate' expression to add a smooth transition effect to the
+			            // buildings as the user zooms in
+			            'fill-extrusion-height': [
+			                "interpolate", ["linear"], ["zoom"],
+			                15, 0,
+			                15.05, ["get", "height"]
+			            ],
+			            'fill-extrusion-base': [
+			                "interpolate", ["linear"], ["zoom"],
+			                15, 0,
+			                15.05, ["get", "min_height"]
+			            ],
+			            'fill-extrusion-opacity': .9
+			        }
+			    });
+			});
+</script>
+
+
+</div>
+</div>
+
+
+			<div id="overlay"></div>
+			<div id="main">
+
+				<!-- Header -->
+					<header id="header">
+						<h1>Hi, I'm Harrison</h1>
+						<p class="sub">Development&nbsp;&bull;&nbsp;Mapping &nbsp;&bull;&nbsp; Geospatial Solutions</p>
+						<nav>
+							<ul>
+								<li><a href="https://twitter.com/hwitt2" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+								<li><a href="https://github.com/altwitt" class="icon fa-github"><span class="label">Github</span></a></li>
+								<li><a href="https://www.linkedin.com/in/altwitt/" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="hwitt2@gmail.com" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<span class="copyright">&copy; Copyright 2023  Harrison Witt</span>
+					</footer>
+	</body>
+</html>
